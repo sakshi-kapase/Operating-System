@@ -124,6 +124,34 @@ modify_record() {
     fi
 }
 
+search_record() {
+    echo "Enter Address book name"
+    read ab
+
+    if [ -f "$ab" ]; then
+        echo "Enter roll number to search:"
+        read rn
+
+      
+        record=$(grep "^$rn[[:space:]]" "$ab")
+
+        if [ -n "$record" ]; then
+            echo -e "\nRecord found:"
+            printf "%-10s %-15s %-10s %-10s %-10s\n" "ROLLNO" "NAME" "PERCENTAGE" "BRANCH" "CLASS"
+            rn=$(echo "$record" | awk '{print $1}')
+            nm=$(echo "$record" | awk '{print $2}')
+            pc=$(echo "$record" | awk '{print $3}')
+            br=$(echo "$record" | awk '{print $4}')
+            cl=$(echo "$record" | awk '{print $5}')
+            printf "%-10s %-15s %-10s %-10s %-10s\n" "$rn" "$nm" "$pc" "$br" "$cl"
+        else
+            echo "Error: Record not found."
+        fi
+    else
+        echo "Error: File does not exist"
+    fi
+}
+
 
 ans=y
 while [ "$ans" = "y" ]
@@ -135,7 +163,8 @@ do
     echo "3) Insert a record"
     echo "4) Delete a record"
     echo "5) Modify a record"
-    echo "6) Exit"
+    echo "6) Search a record"
+    echo "7) Exit"
     echo -ne "\nEnter your choice: "
     read choice
 
@@ -145,11 +174,11 @@ do
         3) insert ;;
         4) delete_record ;;
         5) modify_record ;;
-        6) exit ;;
+        6) search_record;;
+        7) exit ;;
         *) echo "Enter a valid choice!" ;;
     esac
 
     echo -ne "\nDo you want to continue? (y/n): "
     read ans
 done
-
